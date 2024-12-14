@@ -22,7 +22,15 @@ const CustomerViewPage = () => {
     const [wallet, setWallet] = useState({});
     const [info, setinfo] = useState({});
     useEffect(() => {
-        const fetchCustomer = async () => {
+/*************  ✨ Codeium Command ⭐  *************/
+        /**
+         * Fetches the customer's information from Firestore
+         * @async
+         * @function
+         * @param {string} id - The customer's ID
+         * @returns {Promise<void>}
+         */
+/******  8f2be12a-640e-46c2-9712-0dab1117c382  *******/        const fetchCustomer = async () => {
             const customerRef = doc(db, 'accounts', id);
             const customerSnapshot = await getDoc(customerRef);
             if (customerSnapshot.exists()) {

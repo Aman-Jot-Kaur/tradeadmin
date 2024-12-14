@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Typography, TextField, Button, Box } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Grid, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../services/firebase'; // Import the Firestore instance
 import { collection, addDoc } from 'firebase/firestore'; // Firestore functions
 import Sidebar from '../components/Sidebar';
@@ -14,15 +14,20 @@ const AddTradePage = () => {
     status: '',
     symbol: '',
     type: '',
-  })
+  });
+
+  const subadminEmail = localStorage.getItem('adminEmailSA'); // Get subadmin email from localStorage
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('✌️formData --->', formData);
+    // Add subadmin email to formData
+    const tradeData = { ...formData, emails:[subadminEmail,"superadmin@gmail.com"] };
+    console.log('✌️formData with subadminEmail --->', tradeData);
+    
     const tradesRef = collection(db, 'trades'); // Reference to the trades collection
-    await addDoc(tradesRef, formData); // Use addDoc to add the new trade
+    await addDoc(tradesRef, tradeData); // Use addDoc to add the new trade with subadminEmail
     navigate('/trades');
   };
 
@@ -30,8 +35,8 @@ const AddTradePage = () => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   return (
     <Grid container className='outergrid'>

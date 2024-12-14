@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "1d0a731f-2f92-4be2-b9c1-e40d1bec81c5"
+      }
+    },
+    "android": {
+      "package": "com.amanjot3110.payment"
+    }
+  }
+}

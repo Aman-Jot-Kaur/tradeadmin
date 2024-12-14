@@ -11,16 +11,21 @@ const TradesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [tradeFilter, setTradeFilter] = useState('all'); // For filtering open/close trades
 
+  const currentEmail = localStorage.getItem('adminEmailSA'); // Get current admin email
+
   useEffect(() => {
     const fetchTrades = async () => {
       const tradesCollection = collection(db, 'trades');
       const tradesSnapshot = await getDocs(tradesCollection);
-      const tradesData = tradesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const tradesData = tradesSnapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((trade) => trade.emails?.includes(currentEmail)); // Filter trades by emails array
+
       setTrades(tradesData);
       setFilteredTrades(tradesData); // Initialize filtered trades
     };
     fetchTrades();
-  }, []);
+  }, [currentEmail]);
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, 'trades', id));
@@ -98,16 +103,20 @@ const TradesPage = () => {
             </FormControl>
           </Grid>
         </Grid>
-  {/* Add Trade Button */}
-  <Button 
-    variant="contained" 
-    color="primary" 
-    component={Link} 
-    to="/trades/add" 
-    sx={{ marginBottom: '20px' }}
-  >
-    Add Trade
-  </Button>
+
+        {/* Add Trade Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/trades/add"
+          sx={{ marginBottom: '20px' }}
+        >
+          Add Trade
+        </Button>
+        {filteredTrades.length === 0 ? (
+                <h1 style={{textAlign:"center",width:"50vw"}}>no trades available yet</h1>
+            ) :
         <Table>
           <TableHead>
             <TableRow>
@@ -124,6 +133,7 @@ const TradesPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+            
             {filteredTrades.map((trade, index) => (
               <TableRow key={trade.id}>
                 <TableCell>{index + 1}</TableCell>
@@ -144,7 +154,7 @@ const TradesPage = () => {
               </TableRow>
             ))}
           </TableBody>
-        </Table>
+        </Table>}
       </Box>
     </Box>
   );

@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 import LoginPage from './pages/LoginPage';
 import TradesPage from './pages/TradesPage';
 import CustomersPage from './pages/CustomerPage';
@@ -10,28 +11,97 @@ import EditRequestPage from './pages/EditRequestPagee';
 import RequestsPage from './pages/RequestsPage';
 import CustomerViewPage from './pages/CustomerInfo';
 import AddSubadminPage from './pages/AddSubadminPage';
-import EditSubadminPage from "./pages/EdotSubadminPage"
+import EditSubadminPage from "./pages/EdotSubadminPage";
 import AddRequestPage from './pages/AddRequestPage';
-import "./App.css"
+import "./App.css";
+import { auth } from './services/firebase';
+import SignupPage from './pages/Signup';
+import AllChatsPage from './pages/AllChatsPage';
+import ChatViewPage from './pages/ChatDetailPage'; // Assuming you have a ChatViewPage component for individual chat
+
 function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Monitor authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Optional loading spinner or screen
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/trades" element={<TradesPage />} />
-        <Route path="/requests" element={<RequestsPage />} />
-
-        <Route path="/trades/add" element={<AddTradePage />} />
-        <Route path="/trades/:id/edit" element={<EditTradePage />} />
-        <Route path="/customers" element={<CustomersPage />} />
-        <Route path="/subadmin" element={<SubAdminPage />} />
-        <Route path="/subadmin/add" element={<AddSubadminPage />} />
-        <Route path='/subadmin/edit/:id' element={<EditSubadminPage />} />
-
-        <Route path='/customers/:id' element={<CustomerViewPage />} />
-        <Route path="/requests/:id" element={<EditRequestPage />} />
-        <Route path="/requests/add" element={<AddRequestPage />} />
-
+        {/* If the user is logged in, redirect them from login/signup to TradesPage */}
+        <Route
+          path="/"
+          element={user ? <Navigate to="/trades" replace /> : <LoginPage />}
+        />
+        <Route
+          path="/login"
+          element={<LoginPage/>}
+        />
+        {/* Protected Routes */}
+        <Route
+          path="/trades"
+          element={user ? <TradesPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/requests"
+          element={user ? <RequestsPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/trades/add"
+          element={user ? <AddTradePage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/trades/:id/edit"
+          element={user ? <EditTradePage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/customers"
+          element={user ? <CustomersPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/chats"
+          element={user ? <AllChatsPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/chats/:sender"
+          element={user ? <ChatViewPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/subadmin"
+          element={user ? <SubAdminPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/subadmin/add"
+          element={user ? <AddSubadminPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/subadmin/edit/:id"
+          element={user ? <EditSubadminPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/customers/:id"
+          element={user ? <CustomerViewPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/requests/:id"
+          element={user ? <EditRequestPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/requests/add"
+          element={user ? <AddRequestPage /> : <Navigate to="/" replace />}
+        />
       </Routes>
     </BrowserRouter>
   );

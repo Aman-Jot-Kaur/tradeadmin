@@ -15,6 +15,7 @@ import { auth } from '../services/firebase';
 const Sidebar = () => {
   const handleLogout = async () => {
     await signOut(auth);
+    localStorage.removeItem('adminEmailSA');
     window.location.href = '/';
   };
 
@@ -29,6 +30,7 @@ const Sidebar = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%'
+      
       }}
     >
       <Typography 
@@ -69,6 +71,17 @@ const Sidebar = () => {
         <ListItem button component={Link} to="/subadmin">
           <ListItemText 
             primary="Sub Admins" 
+            sx={{ 
+              fontSize: 18, 
+              fontWeight: 'medium', 
+              color: '#0063cc',
+              textTransform: 'capitalize'
+            }}
+          />
+        </ListItem>
+        <ListItem button component={Link} to="/chats">
+          <ListItemText 
+            primary="Chats" 
             sx={{ 
               fontSize: 18, 
               fontWeight: 'medium', 

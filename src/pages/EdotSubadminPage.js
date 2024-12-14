@@ -19,10 +19,9 @@ const EditSubadminPage = () => {
   }, [id]);
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
     const subadminRef = doc(db, 'subadmins', id); 
     await updateDoc(subadminRef, subadmin); 
-    window.location.href = '/subadmin';
+    window.location.href = '/trades';
   };
 
   const handleInputChange = (e) => {

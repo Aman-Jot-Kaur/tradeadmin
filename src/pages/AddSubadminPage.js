@@ -5,19 +5,24 @@ import { db } from '../services/firebase';
 import { collection, addDoc } from 'firebase/firestore'; 
 import Sidebar from '../components/Sidebar';
 import SubadminForm from '../components/SubAdminForm/Subadminform';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../services/firebase';
 const AddSubadminPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     assignedUser: '',
+    role:'admin'
   })
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('formData --->', formData);
+    const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+    const user = userCredential.user;
+    console.log('formData --->', formData,userCredential);
     const subadminsRef = collection(db, 'subadmins'); 
     await addDoc(subadminsRef, formData); 
     navigate('/subadmin');

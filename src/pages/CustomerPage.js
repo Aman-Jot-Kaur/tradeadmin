@@ -10,16 +10,21 @@ const CustomersPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCustomers, setFilteredCustomers] = useState([]);
 
+  const currentEmail = localStorage.getItem('adminEmailSA'); // Get the logged-in admin/subadmin email
+
   useEffect(() => {
     const fetchCustomers = async () => {
       const customersRef = collection(db, 'users'); // Reference to the customers collection
       const customersSnapshot = await getDocs(customersRef); // Use getDocs to retrieve all documents
-      const customersData = customersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const customersData = customersSnapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((customer) => customer.subadmins?.includes(currentEmail)); // Filter by subadmins array
+
       setCustomers(customersData);
       setFilteredCustomers(customersData); // Initialize filtered customers
     };
     fetchCustomers();
-  }, []);
+  }, [currentEmail]);
 
   const handleDelete = async (id) => {
     const customerRef = doc(db, 'users', id); // Reference to the specific document
@@ -71,7 +76,9 @@ const CustomersPage = () => {
             sx={{ width: '50%', marginBottom: 2 }}
           />
         </Grid>
-        
+        {filteredCustomers.length === 0 ? (
+                <h1 style={{textAlign:"center",width:"50vw"}}>no data available yet</h1>
+            ) :
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
             <TableRow>
@@ -160,7 +167,7 @@ const CustomersPage = () => {
               </TableRow>
             ))}
           </TableBody>
-        </Table>
+        </Table>}
       </Box>
     </Box>
   );
