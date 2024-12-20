@@ -15,10 +15,11 @@ import EditSubadminPage from "./pages/EdotSubadminPage";
 import AddRequestPage from './pages/AddRequestPage';
 import "./App.css";
 import { auth } from './services/firebase';
-import SignupPage from './pages/Signup';
 import AllChatsPage from './pages/AllChatsPage';
 import ChatViewPage from './pages/ChatDetailPage'; // Assuming you have a ChatViewPage component for individual chat
-
+import NewsPage from './pages/News';
+import NewsFormPage from './pages/NewsForm';
+import SignupPage from './pages/Signup';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +44,7 @@ function App() {
         {/* If the user is logged in, redirect them from login/signup to TradesPage */}
         <Route
           path="/"
-          element={user ? <Navigate to="/trades" replace /> : <LoginPage />}
+          element={user ? <Navigate to="/trades" replace /> : <SignupPage />}
         />
         <Route
           path="/login"
@@ -69,6 +70,10 @@ function App() {
         <Route
           path="/customers"
           element={user ? <CustomersPage /> : <Navigate to="/" replace />}
+        />
+          <Route
+          path="/news"
+          element={user ? <NewsPage/> : <Navigate to="/" replace />}
         />
         <Route
           path="/chats"
@@ -102,6 +107,8 @@ function App() {
           path="/requests/add"
           element={user ? <AddRequestPage /> : <Navigate to="/" replace />}
         />
+         <Route path="/news/add" element={<NewsFormPage />} />
+         <Route path="/news/edit/:id" element={<NewsFormPage />} />
       </Routes>
     </BrowserRouter>
   );

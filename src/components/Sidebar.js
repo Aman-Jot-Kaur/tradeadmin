@@ -11,12 +11,14 @@ import {
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../services/firebase';
-
+import { useNavigate } from 'react-router-dom';
 const Sidebar = () => {
+  const navigate = useNavigate();
   const handleLogout = async () => {
     await signOut(auth);
     localStorage.removeItem('adminEmailSA');
-    window.location.href = '/';
+    navigate('/login')
+
   };
 
   return (
@@ -93,6 +95,17 @@ const Sidebar = () => {
         <ListItem button component={Link} to="/requests">
           <ListItemText 
             primary="Requests" 
+            sx={{ 
+              fontSize: 18, 
+              fontWeight: 'medium', 
+              color: '#0063cc',
+              textTransform: 'capitalize'
+            }}
+          />
+        </ListItem>
+        <ListItem button component={Link} to="/news">
+          <ListItemText 
+            primary="News" 
             sx={{ 
               fontSize: 18, 
               fontWeight: 'medium', 

@@ -111,13 +111,21 @@ const CustomerViewPage = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {Object.keys(customer).map((key, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{formatLabel(key)}</TableCell>
-                                            <TableCell>{customer[key] || "N/A"}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
+    {Object.keys(customer).map((key, index) => {
+        const value = customer[key];
+        return (
+            <TableRow key={index}>
+                <TableCell>{formatLabel(key)}</TableCell>
+                <TableCell>
+                    {typeof value === "object" && value !== null
+                        ? JSON.stringify(value) // Convert object/array to string
+                        : value || "N/A"}
+                </TableCell>
+            </TableRow>
+        );
+    })}
+</TableBody>
+
                             </Table>
                             <Typography
                                 variant="h6"
@@ -137,13 +145,22 @@ const CustomerViewPage = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {Object.keys(info).map((key, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{formatLabel(key)}</TableCell>
-                                            <TableCell>{info[key] || "N/A"}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
+  {info && Object.keys(info).length > 0 ? (
+    Object.keys(info).map((key, index) => (
+      <TableRow key={index}>
+        <TableCell align="left">{formatLabel(key)}</TableCell>
+        <TableCell align="right">
+          {typeof info[key] === 'object' ? JSON.stringify(info[key], null, 2) : info[key] || "N/A"}
+        </TableCell>
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={2}>No data available</TableCell>
+    </TableRow>
+  )}
+</TableBody>
+
                             </Table>
                         </Grid> ̰
                         

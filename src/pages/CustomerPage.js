@@ -14,6 +14,7 @@ const CustomersPage = () => {
 
   useEffect(() => {
     const fetchCustomers = async () => {
+      console.log(currentEmail)
       const customersRef = collection(db, 'users'); // Reference to the customers collection
       const customersSnapshot = await getDocs(customersRef); // Use getDocs to retrieve all documents
       const customersData = customersSnapshot.docs

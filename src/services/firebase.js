@@ -5,13 +5,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database'; // Import for Realtime Database
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBSuUsCgYzJIegTUusbjXY3YZh3SwKlw9M",
-  authDomain: "stocksapp-64c0e.firebaseapp.com",
-  projectId: "stocksapp-64c0e",
-  storageBucket: "stocksapp-64c0e.appspot.com",
-  messagingSenderId: "259190736069",
-  appId: "1:259190736069:web:53b28135cc41c2f2889cac",
-  databaseURL: "https://stocksapp-64c0e-default-rtdb.firebaseio.com", // Add databaseURL for Realtime DB
+  apiKey: "AIzaSyAp-ySGR6zxb2SH9LhcYsEd-YUI8qonR4c",
+  authDomain: "blackbull-85321.firebaseapp.com",
+  projectId: "blackbull-85321",
+  storageBucket: "blackbull-85321.firebasestorage.app",
+  messagingSenderId: "780688908051",
+  appId: "1:780688908051:web:40ef50e0c35f5d667bc4e6"
 };
 
 const app = initializeApp(firebaseConfig);

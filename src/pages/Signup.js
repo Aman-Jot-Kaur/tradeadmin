@@ -8,6 +8,7 @@ const SignupPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    role:'superadmin'
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -25,6 +26,7 @@ const SignupPage = () => {
       localStorage.setItem('user', JSON.stringify({ email: user.email, uid: user.uid }));
 
       setSuccess('Account created successfully!');
+    
     } catch (error) {
       setError(error.message);
     }

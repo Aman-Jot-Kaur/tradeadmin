@@ -13,26 +13,27 @@ const AllChatsPage = () => {
   const [assignedUsers, setAssignedUsers] = useState([]);
   const navigate = useNavigate();
 
-  const currentAdminEmail = localStorage.getItem('adminEmailSA'); // Get subadmin email from local storage
+  const currentAdminEmail = localStorage.getItem('adminEmailSA');
 
   useEffect(() => {
-    // Fetch assigned users for the logged-in subadmin from Firestore collection
+    // Fetch assigned users for the logged-in subadmin
     const fetchData = async () => {
       if (currentAdminEmail) {
         try {
           const subadminsRef = collection(db, 'subadmins');
-          const q = query(subadminsRef, where('email', '==', currentAdminEmail)); // Query to find subadmin by email
+          const q = query(subadminsRef, where('email', '==', currentAdminEmail));
+          
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
             querySnapshot.forEach((doc) => {
               const assignedUsersData = doc.data().assignedUsers || [];
-              console.log('Assigned Users:', assignedUsersData);
-              setAssignedUsers(assignedUsersData); // Set the array of assigned users
+              setAssignedUsers(assignedUsersData);
             });
           } else {
             console.log('No subadmin found with this email');
           }
+          
         } catch (error) {
           console.error('Error fetching assigned users:', error);
         }
@@ -48,25 +49,33 @@ const AllChatsPage = () => {
     const unsubscribe = onValue(messagesRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const chatList = Object.entries(data).map(([key, value]) => ({
-          id: key,
-          ...value,
-        }));
 
-        // Filter chats to include only assigned users' chats
-        const filtered = chatList.filter((chat) =>
-assignedUsers.includes(chat.sender)
-        );
+        // Use a Map to keep the latest message for each sender
+        const latestMessagesMap = new Map();
 
-        setChats(filtered);
-        setFilteredChats(filtered);
+        Object.entries(data).forEach(([key, message]) => {
+          const sender = message.sender;
+          if (
+            assignedUsers.includes(sender) &&
+            (!latestMessagesMap.has(sender) ||
+              latestMessagesMap.get(sender).timestamp < message.timestamp)
+          ) {
+            latestMessagesMap.set(sender, { id: key, ...message });
+          }
+        });
+
+        // Convert Map to an array of latest messages
+        const latestMessages = Array.from(latestMessagesMap.values());
+
+        setChats(latestMessages);
+        setFilteredChats(latestMessages);
       } else {
         setChats([]);
         setFilteredChats([]);
       }
     });
 
-    return () => unsubscribe(); // Cleanup listener
+    return () => unsubscribe();
   }, [assignedUsers]);
 
   const handleSearch = (event) => {
@@ -78,7 +87,7 @@ assignedUsers.includes(chat.sender)
   };
 
   const handleChatSelect = (chat) => {
-    navigate(`/chats/${chat.sender}`); // Navigate to chat detail
+    navigate(`/chats/${chat.sender}`);
   };
 
   return (
@@ -119,8 +128,7 @@ assignedUsers.includes(chat.sender)
             </div>
           ))
         ) : (
-            <h1 style={{textAlign:"center",width:"50vw"}}>no data available yet</h1>
-        
+          <h1 style={{ textAlign: 'center', width: '50vw' }}>No data available yet</h1>
         )}
       </Box>
     </Box>

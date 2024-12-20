@@ -11,7 +11,7 @@ const ChatDetailPage = () => {
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
-  const supportEmail = localStorage.getItem('adminEmailSA');
+  const supportEmail = "support";
 
   useEffect(() => {
     if (!sender) return;
@@ -22,8 +22,8 @@ const ChatDetailPage = () => {
         const data = snapshot.val();
         const messages = Object.entries(data)
           .filter(([key, value]) =>
-            (value.sender === sender && value.receiver === supportEmail) ||
-            (value.sender === supportEmail && value.receiver === sender)
+            (value.sender === sender && value.receiver === "support") ||
+            (value.sender === "support" && value.receiver === sender)
           )
           .map(([key, value]) => ({
             id: key,
@@ -49,7 +49,7 @@ const ChatDetailPage = () => {
     const newMessageRef = push(messagesRef);
 
     const messageData = {
-      sender: supportEmail,
+      sender: "support",
       text: newMessage.trim(),
       timestamp: Date.now(),
       receiver: sender,
