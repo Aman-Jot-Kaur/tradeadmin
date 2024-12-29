@@ -30,6 +30,7 @@ const TradesPage = () => {
 
   useEffect(() => {
     const fetchTrades = async () => {
+      console.log(currentEmail,"email now")
       const tradesCollection = collection(db, 'trades');
       const tradesSnapshot = await getDocs(tradesCollection);
       const tradesData = tradesSnapshot.docs
