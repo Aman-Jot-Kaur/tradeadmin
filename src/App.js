@@ -44,7 +44,7 @@ function App() {
         {/* If the user is logged in, redirect them from login/signup to TradesPage */}
         <Route
           path="/"
-          element={user ? <Navigate to="/trades" replace /> : <SignupPage />}
+          element={user ? <Navigate to="/trades" replace /> : <LoginPage />}
         />
         <Route
           path="/login"

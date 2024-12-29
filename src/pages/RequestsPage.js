@@ -134,7 +134,8 @@ const RequestsPage = () => {
                 <TableCell>S.No.</TableCell>
                 <TableCell>User ID</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Requested Type</TableCell>
+                <TableCell>Requested method</TableCell>
+                <TableCell>Requested type</TableCell>
                 <TableCell>Requested Amount</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Total Amount</TableCell>
@@ -147,8 +148,9 @@ const RequestsPage = () => {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{customer.userId}</TableCell>
                   <TableCell>{customer.email}</TableCell>
+                  <TableCell>{customer.method}</TableCell>
                   <TableCell>{customer.type}</TableCell>
-                  <TableCell>{customer.requestedAmount}</TableCell>
+                  <TableCell>{customer.amount}</TableCell>
                   <TableCell>{customer.status}</TableCell>
                   <TableCell>{customer.totalAmount}</TableCell>
                   <TableCell sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
