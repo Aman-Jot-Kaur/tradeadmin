@@ -3,15 +3,13 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database'; // Import for Realtime Database
-
 const firebaseConfig = {
-  apiKey: "AIzaSyAp-ySGR6zxb2SH9LhcYsEd-YUI8qonR4c",
-  authDomain: "stocksapp-64c0e.web.app",
-  projectId: "blackbull-85321",
-  storageBucket: "blackbull-85321.firebasestorage.app",
-  messagingSenderId: "780688908051",
-  appId: "1:780688908051:web:40ef50e0c35f5d667bc4e6",
-
+  apiKey: "AIzaSyCAWrC9O9P1GS5jw2YD71WZcusWBI0kRSU",
+  authDomain: "santoshblackbull.firebaseapp.com",
+  projectId: "santoshblackbull",
+  storageBucket: "santoshblackbull.firebasestorage.app",
+  messagingSenderId: "581138445793",
+  appId: "1:581138445793:web:ab025eb58f07053a430ea0"
 };
 
 const app = initializeApp(firebaseConfig);
