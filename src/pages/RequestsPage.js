@@ -26,7 +26,7 @@ const RequestsPage = () => {
               setAssignedUsers(assignedUsersData); 
             });
           } else {
-            console.log('No subadmin document found');
+            console.log('No subadmin document found', currentAdminEmail);
           }
         } catch (error) {
           console.error('Error fetching subadmin data:', error);
