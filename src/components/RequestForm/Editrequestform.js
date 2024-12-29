@@ -57,7 +57,8 @@ const RequestForm = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        width: '50%',
+        width: '100%',
+        maxWidth: '600px',
         margin: 'auto',
         alignItems: 'center',
         padding: '20px',
@@ -82,6 +83,7 @@ const RequestForm = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: '20px',
+          width: '100%',
         }}
       >
         <TextField
@@ -141,7 +143,7 @@ const RequestForm = () => {
           <MenuItem value="accepted">Accepted</MenuItem>
           <MenuItem value="rejected">Rejected</MenuItem>
         </TextField>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Button
             variant="contained"
             type="submit"

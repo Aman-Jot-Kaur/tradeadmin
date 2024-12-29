@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Box, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { db } from '../services/firebase'; // Import the Firestore instance
-import { collection, getDocs, doc, query,where, deleteDoc } from 'firebase/firestore'; // Firestore functions
+import { db } from '../services/firebase'; 
+import { collection, getDocs, doc, query, where, deleteDoc } from 'firebase/firestore'; 
 import Sidebar from '../components/Sidebar';
 
 const RequestsPage = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [assignedUsers, setAssignedUsers] = useState([]);
-  const currentAdminEmail = localStorage.getItem('adminEmailSA'); // Get subadmin email from local storage
+  const currentAdminEmail = localStorage.getItem('adminEmailSA'); 
 
   useEffect(() => {
     const fetchSubadminData = async () => {
       if (currentAdminEmail) {
         try {
-          // Fetch the subadmin document to get the assigned users
           const subadminsRef = collection(db, 'subadmins');
-          const q = query(subadminsRef, where('email', '==', currentAdminEmail)); // Query to find subadmin by email
+          const q = query(subadminsRef, where('email', '==', currentAdminEmail)); 
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
             querySnapshot.forEach((doc) => {
               const assignedUsersData = doc.data().assignedUsers || [];
               console.log('Assigned Users:', assignedUsersData);
-              setAssignedUsers(assignedUsersData); // Set the array of assigned users
+              setAssignedUsers(assignedUsersData); 
             });
           } else {
             console.log('No subadmin document found');
@@ -48,20 +47,18 @@ const RequestsPage = () => {
           ...doc.data(),
         }));
 
-        // Filter requests where userId matches any in the assignedUsers list
         const filteredCustomers = customersData.filter((customer) =>
           assignedUsers.includes(customer.email)
         );
 
-        // Sort customers by Firestore timestamp in descending order (latest on top)
-        filteredCustomers.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds); // Sort by timestamp field
+        filteredCustomers.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds); 
 
         setCustomers(filteredCustomers);
       }
     };
 
     fetchCustomers();
-  }, [assignedUsers]); // Re-fetch when assignedUsers changes
+  }, [assignedUsers]);
 
   const handleDelete = async (id) => {
     const customerRef = doc(db, 'WithdrawRequest', id);
@@ -69,19 +66,16 @@ const RequestsPage = () => {
     setCustomers(customers.filter((customer) => customer.id !== id));
   };
 
-  // Filter customers based on the search term
   const filteredCustomers = customers.filter((customer) =>
     customer.email?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
     customer.userId.toLowerCase().includes(searchTerm?.toLowerCase())
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Grid item xs={2} sx={{ padding: '20px' }}>
-        {/* Sidebar */}
-        <Sidebar />
-      </Grid>
-      <Box sx={{ width: '100%', padding: '20px' }}>
+    <Box sx={{ display: 'flex', height: '100vh', backgroundColor: '#f9f9f9', mt: 4 }}>
+      <Sidebar sx={{ flex: 1, maxWidth: '250px', borderRight: '1px solid #ddd' }} />
+
+      <Box sx={{ flex: 3, padding: '20px', overflowY: 'auto' }}>
         <Typography
           variant="h4"
           sx={{
@@ -94,8 +88,7 @@ const RequestsPage = () => {
           Requests
         </Typography>
 
-        {/* Search Field */}
-        <Grid container justifyContent="flex-end" mb={2}>
+        <Grid container justifyContent="space-between" alignItems="center" mb={2}>
           <TextField
             label="Search by User ID or Email"
             variant="outlined"
@@ -106,74 +99,90 @@ const RequestsPage = () => {
               width: '300px',
               fontSize: '16px',
               borderRadius: '5px',
+              '@media (max-width: 600px)': {
+                width: '100%',
+              },
             }}
           />
+          <Button 
+            variant="contained" 
+            color="primary" 
+            component={Link} 
+            to="/requests/add"
+            sx={{ fontWeight: 'bold', textTransform: 'capitalize',  mt: 4 }}
+          >
+            Add Request
+          </Button>
         </Grid>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          component={Link} 
-          to="/requests/add"
-          sx={{ marginBottom: '20px' }}
-        >
-          Add Request
-        </Button>
+
         {filteredCustomers.length === 0 ? (
-                <h1 style={{textAlign:"center",width:"50vw"}}>no data available yet</h1>
-            ) :
-        <Table sx={{ minWidth: 650 }}>
-          <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
-            <TableRow>
-              <TableCell>S.No.</TableCell>
-              <TableCell>User id</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Requested Type</TableCell>
-              <TableCell>Requested Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Total Amount</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredCustomers.map((customer, index) => (
-              <TableRow key={customer.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{customer.userId}</TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>{customer.type}</TableCell>
-                <TableCell>{customer.requestedAmount}</TableCell>
-                <TableCell>{customer.status}</TableCell>
-                <TableCell>{customer.totalAmount}</TableCell>
-                <TableCell>
-                  <Link
-                    to={`/requests/${customer.id}`}
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 'medium',
-                      color: '#0063cc',
-                      textTransform: 'capitalize',
-                      marginRight: 2,
-                    }}
-                  >
-                    Edit
-                  </Link>
-                  <Button
-                    onClick={() => handleDelete(customer.id)}
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 'medium',
-                      padding: '5px 10px',
-                      borderRadius: '5px',
-                      color: 'red',
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: "center",
+              width: "100%",
+              color: "#888",
+              marginTop: "20px",
+            }}
+          >
+            No data available yet
+          </Typography>
+        ) : (
+          <Table sx={{ width: '100%', backgroundColor: '#fff', borderRadius: '8px', overflow: 'hidden' }}>
+            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+              <TableRow>
+                <TableCell>S.No.</TableCell>
+                <TableCell>User ID</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Requested Type</TableCell>
+                <TableCell>Requested Amount</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Total Amount</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>}
+            </TableHead>
+            <TableBody>
+              {filteredCustomers.map((customer, index) => (
+                <TableRow key={customer.id} sx={{ '&:hover': { backgroundColor: '#fafafa' } }}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{customer.userId}</TableCell>
+                  <TableCell>{customer.email}</TableCell>
+                  <TableCell>{customer.type}</TableCell>
+                  <TableCell>{customer.requestedAmount}</TableCell>
+                  <TableCell>{customer.status}</TableCell>
+                  <TableCell>{customer.totalAmount}</TableCell>
+                  <TableCell sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Button
+                      component={Link}
+                      to={`/requests/${customer.id}`}
+                      sx={{
+                        fontSize: '14px',
+                        color: '#1976d2',
+                        textTransform: 'capitalize',
+                        padding: 0,
+                        minWidth: 'auto',
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(customer.id)}
+                      sx={{
+                        fontSize: '14px',
+                        color: 'red',
+                        textTransform: 'capitalize',
+                        padding: 0,
+                        minWidth: 'auto',
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </Box>
     </Box>
   );

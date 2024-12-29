@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { doc, getDoc, setDoc, updateDoc, collection, addDoc, FieldValue } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, addDoc, FieldValue } from 'firebase/firestore';
 import { db } from '../services/firebase'; // Firebase Firestore instance
 import { Box, TextField, Button } from '@mui/material';
 
@@ -71,7 +71,16 @@ const NewsFormPage = () => {
   };
 
   return (
-    <Box sx={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <Box
+      sx={{
+        padding: '20px',
+        maxWidth: '600px',
+        margin: '0 auto',
+        '@media (max-width: 600px)': {
+          maxWidth: '100%', // Full width on small screens
+        },
+      }}
+    >
       <h2>{isEdit ? 'Edit News' : 'Add News'}</h2>
 
       {loading && <p>Loading...</p>}
@@ -84,7 +93,12 @@ const NewsFormPage = () => {
           onChange={handleChange}
           fullWidth
           required
-          sx={{ marginBottom: '20px' }}
+          sx={{
+            marginBottom: '20px',
+            '@media (max-width: 600px)': {
+              marginBottom: '10px', // Adjust spacing on small screens
+            },
+          }}
         />
 
         <TextField
@@ -96,7 +110,12 @@ const NewsFormPage = () => {
           required
           multiline
           rows={4}
-          sx={{ marginBottom: '20px' }}
+          sx={{
+            marginBottom: '20px',
+            '@media (max-width: 600px)': {
+              marginBottom: '10px', // Adjust spacing on small screens
+            },
+          }}
         />
 
         <TextField
@@ -106,7 +125,12 @@ const NewsFormPage = () => {
           onChange={handleChange}
           fullWidth
           required
-          sx={{ marginBottom: '20px' }}
+          sx={{
+            marginBottom: '20px',
+            '@media (max-width: 600px)': {
+              marginBottom: '10px', // Adjust spacing on small screens
+            },
+          }}
         />
 
         <Button
@@ -115,6 +139,11 @@ const NewsFormPage = () => {
           color="primary"
           fullWidth
           disabled={loading}
+          sx={{
+            '@media (max-width: 600px)': {
+              padding: '10px', // Adjust button padding for smaller screens
+            },
+          }}
         >
           {isEdit ? 'Update News' : 'Add News'}
         </Button>

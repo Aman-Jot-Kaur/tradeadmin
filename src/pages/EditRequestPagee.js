@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography, TextField, Button } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { Grid, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import { db } from '../services/firebase';  
-import { doc, getDoc, updateDoc } from "firebase/firestore"; 
+import { doc, getDoc, updateDoc } from 'firebase/firestore'; 
 import Sidebar from '../components/Sidebar';
 import EditRequestPage from '../components/RequestForm/Editrequestform';
+
 const EditSubadminPage = () => {
   const [subadmin, setSubadmin] = useState({});
   const { id } = useParams();
@@ -29,16 +30,43 @@ const EditSubadminPage = () => {
     setSubadmin({
       ...subadmin,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   return (
-    <Grid container className='outergrid'>
-      <Grid item xs={2}>
-        {/* Sidebar */}
+    <Grid container direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ height: '100vh' }}>
+      {/* Sidebar */}
+      <Grid
+        item
+        xs={12}
+        md={3}
+        lg={2}
+        sx={{
+          backgroundColor: '#f5f5f5',
+          padding: 2,
+          height: { md: '100%', xs: 'auto' },
+        }}
+      >
         <Sidebar />
       </Grid>
-      <Grid item xs={10}>
+
+      {/* Main Content */}
+      <Grid
+        item
+        xs={12}
+        md={9}
+        lg={10}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: { xs: 2, md: 4 },
+        }}
+      >
+        <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: 4 }}>
+          Edit Subadmin Request
+        </Typography>
         <EditRequestPage
           handleInputChange={handleInputChange}
           handleSubmit={handleUpdate}

@@ -69,67 +69,63 @@ const ChatDetailPage = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh' }}>
-      <Grid item xs={2} sx={{ backgroundColor: '#f4f4f4', padding: '20px' }}>
-        <Sidebar />
-      </Grid>
+    <Box sx={{ display: 'flex', height: '100vh', flexDirection: 'column', overflow: 'hidden' }}>
+      <Grid container spacing={2}>
+        {/* Sidebar */}
+        <Grid item xs={12} sm={3} sx={{ backgroundColor: '#f4f4f4', padding: '10px' }}>
+          <Sidebar />
+        </Grid>
 
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '20px',
-          backgroundColor: '#f9f9f9',
-        }}
-      >
-        <Typography variant="h6" sx={styles.header}>
-          Chat with {sender}
-        </Typography>
+        {/* Chat Container */}
+        <Grid item xs={12} sm={9} sx={{ flexGrow: 1, padding: '20px', backgroundColor: '#f9f9f9', overflow: 'auto' }}>
+          <Typography variant="h6" sx={styles.header}>
+            Chat with {sender}
+          </Typography>
 
-        <Box sx={styles.chatMessages}>
-          {chatMessages.map((message) => (
-            <Box
-              key={message.id}
-              sx={{
-                display: 'flex',
-                justifyContent:
-                  message.sender === supportEmail ? 'flex-end' : 'flex-start',
-                marginBottom: '10px',
-              }}
-            >
+          <Box sx={styles.chatMessages}>
+            {chatMessages.map((message) => (
               <Box
-                sx={
-                  message.sender === supportEmail
-                    ? styles.supportMessage
-                    : styles.userMessage
-                }
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent:
+                    message.sender === supportEmail ? 'flex-end' : 'flex-start',
+                  marginBottom: '10px',
+                }}
               >
-                <Typography>{message.text}</Typography>
-                <Typography variant="caption" sx={{ marginTop: '5px', display: 'block' }}>
-                  {formatDate(message.timestamp)}
-                </Typography>
+                <Box
+                  sx={
+                    message.sender === supportEmail
+                      ? styles.supportMessage
+                      : styles.userMessage
+                  }
+                >
+                  <Typography>{message.text}</Typography>
+                  <Typography variant="caption" sx={{ marginTop: '5px', display: 'block' }}>
+                    {formatDate(message.timestamp)}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
-          <div ref={messagesEndRef} />
-        </Box>
+            ))}
+            <div ref={messagesEndRef} />
+          </Box>
 
-        <Box sx={styles.sendMessageContainer}>
-          <TextField
-            fullWidth
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-            multiline
-            rows={2}
-            variant="outlined"
-          />
-          <Button variant="contained" onClick={handleSendMessage} sx={styles.sendButton}>
-            Send
-          </Button>
-        </Box>
-      </Box>
+          <Box sx={styles.sendMessageContainer}>
+            <TextField
+              fullWidth
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type your message..."
+              multiline
+              rows={2}
+              variant="outlined"
+            />
+            <Button variant="contained" onClick={handleSendMessage} sx={styles.sendButton}>
+              Send
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
@@ -148,7 +144,7 @@ const styles = {
   chatMessages: {
     flexGrow: 1,
     overflowY: 'auto',
-    padding: '20px',
+    padding: '10px',
     backgroundColor: '#ecf0f1',
     borderRadius: '10px',
     marginBottom: '20px',
@@ -178,6 +174,7 @@ const styles = {
     backgroundColor: '#ffffff',
     padding: '10px',
     borderRadius: '10px',
+    marginTop: '10px',
   },
   sendButton: {
     padding: '10px 20px',

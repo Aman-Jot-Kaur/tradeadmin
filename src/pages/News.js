@@ -3,6 +3,7 @@ import {
   Grid,
   Typography,
   Button,
+  TableContainer,
   Table,
   TableHead,
   TableRow,
@@ -10,13 +11,23 @@ import {
   TableBody,
   Box,
   TextField,
+  IconButton,
+  Tooltip,
+  Paper,
+  Avatar,
+  useTheme,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../services/firebase'; // Firestore instance
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Sidebar from '../components/Sidebar';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../services/firebase';
 
 const NewsPage = () => {
+  const theme = useTheme();
   const [newsList, setNewsList] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,16 +41,15 @@ const NewsPage = () => {
         ...doc.data(),
       }));
       setNewsList(newsData);
-      setFilteredNews(newsData); // Update the filtered list as well
+      setFilteredNews(newsData);
     } catch (error) {
       console.error('Error fetching news:', error);
     }
   };
 
-  // Refetch news whenever the component is mounted
   useEffect(() => {
     fetchNews();
-  }, []); 
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -58,96 +68,117 @@ const NewsPage = () => {
       newsList.filter(
         (news) =>
           news.title.toLowerCase().includes(query) ||
-          news.desc.toLowerCase().includes(query)
+          news.description.toLowerCase().includes(query)
       )
     );
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Grid item xs={2} sx={{ padding: '20px' }}>
-        {/* Sidebar */}
+    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+      <Grid item xs={12} sm={2} sx={{ padding: '20px', display: { xs: 'none', sm: 'block' } }}>
         <Sidebar />
       </Grid>
-      <Box sx={{ width: '100%', padding: '20px' }}>
-        <Typography variant="h5" sx={{ marginBottom: 4, fontWeight: 'bold' }}>
-          News
+      <Box
+        sx={{
+          width: '100%',
+          padding: '20px',
+          marginTop: { xs: 2, sm: 0 },
+          backgroundColor: theme.palette.background.default,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h4" sx={{ marginBottom: 4, fontWeight: 'bold' }}>
+          News Management
         </Typography>
 
-        {/* Search Bar */}
-        <TextField
-          variant="outlined"
-          fullWidth
-          placeholder="Search by title or description"
-          value={searchQuery}
-          onChange={handleSearch}
-          sx={{ marginBottom: '20px' }}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+          <TextField
+            variant="outlined"
+            fullWidth
+            placeholder="Search news by title or description..."
+            value={searchQuery}
+            onChange={handleSearch}
+            InputProps={{
+              startAdornment: <SearchIcon sx={{ marginRight: 1 }} />,
+            }}
+            sx={{
+              marginRight: 2,
+              width: { xs: '100%', sm: '60%' },
+            }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/news/add"
+            startIcon={<AddCircleOutlineIcon />}
+            sx={{
+              height: '56px',
+              paddingX: 4,
+              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+            }}
+          >
+            Add News
+          </Button>
+        </Box>
 
-        {/* Add News Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          component={Link}
-          to="/news/add"
-          sx={{ marginBottom: '20px' }}
-        >
-          Add News
-        </Button>
-
-        {/* News Table */}
-        {filteredNews?.length === 0 ? (
-          <Typography align="center" sx={{ marginTop: 4 }}>
-            No news available yet
+        {filteredNews.length === 0 ? (
+          <Typography variant="h6" align="center" sx={{ marginTop: 4, color: theme.palette.text.secondary }}>
+            No news available yet.
           </Typography>
         ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>S.No.</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredNews.map((news, index) => (
-                <TableRow key={news.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{news.title}</TableCell>
-                  <TableCell>
-                    {news.description.length > 50
-                      ? `${news.description.substring(0, 50)}...`
-                      : news.description}
-                  </TableCell>
-                  <TableCell>
-                    <img
-                      src={news.imageUrl}
-                      alt="News"
-                      style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-                    />
-                  </TableCell>
-                  <TableCell>
-  {news.timestamp
-    ? new Date(news?.timestamp?.toDate())?.toLocaleString()
-    : 'N/A'}
-</TableCell>
-
-                  <TableCell>
-                    <Link to={`/news/edit/${news.id}`}>Edit</Link>
-                    <Button
-                      onClick={() => handleDelete(news.id)}
-                      sx={{ marginLeft: 2 }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
+          <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+            <Table>
+              <TableHead sx={{ backgroundColor: theme.palette.primary.light }}>
+                <TableRow>
+                  <TableCell>S.No.</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Image</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell align="center">Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {filteredNews.map((news, index) => (
+                  <TableRow key={news.id} hover>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{news.title}</TableCell>
+                    <TableCell>
+                      {news.description.length > 50
+                        ? `${news.description.substring(0, 50)}...`
+                        : news.description}
+                    </TableCell>
+                    <TableCell>
+                      <Avatar
+                        src={news.imageUrl}
+                        alt="News"
+                        variant="rounded"
+                        sx={{ width: 50, height: 50 }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {news.timestamp
+                        ? new Date(news.timestamp.toDate()).toLocaleString()
+                        : 'N/A'}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Edit">
+                        <IconButton component={Link} to={`/news/edit/${news.id}`}>
+                          <EditIcon color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(news.id)}>
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
       </Box>
     </Box>

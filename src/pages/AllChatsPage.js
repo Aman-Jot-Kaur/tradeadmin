@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { rtdb, db } from '../services/firebase';
-import { Grid, Box, TextField } from '@mui/material';
+import { Grid, Box, TextField, Typography, Paper } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 import { useNavigate } from 'react-router-dom';
 
@@ -91,12 +91,15 @@ const AllChatsPage = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Grid item xs={2} sx={{ padding: '20px' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', minHeight: '100vh' }}>
+      <Grid item xs={12} sm={3} sx={{ padding: '10px' }}>
         <Sidebar />
       </Grid>
-      <Box sx={{ width: '100%', padding: '20px' }}>
-        <h2 style={{ marginBottom: '20px' }}>Chats</h2>
+
+      <Grid item xs={12} sm={9} sx={{ padding: '20px' }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Chats
+        </Typography>
 
         <TextField
           variant="outlined"
@@ -104,33 +107,44 @@ const AllChatsPage = () => {
           placeholder="Search by Sender"
           value={searchQuery}
           onChange={handleSearch}
-          sx={{ marginBottom: '20px' }}
+          sx={{
+            marginBottom: '20px',
+            '& .MuiInputBase-root': {
+              borderRadius: '10px',
+            },
+          }}
         />
 
         {filteredChats.length > 0 ? (
           filteredChats.map((chat) => (
-            <div
+            <Paper
               key={chat.id}
-              style={{
+              sx={{
                 marginBottom: '15px',
                 padding: '15px',
-                border: '1px solid #ddd',
                 borderRadius: '8px',
                 cursor: 'pointer',
+                '&:hover': {
+                  backgroundColor: '#f4f4f4',
+                },
               }}
               onClick={() => handleChatSelect(chat)}
             >
-              <p><strong>{chat.sender}</strong></p>
-              <p>{chat.text}</p>
-              <p style={{ color: '#aaa' }}>
+              <Typography variant="h6">{chat.sender}</Typography>
+              <Typography variant="body2" sx={{ color: '#777' }}>
+                {chat.text}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#aaa' }}>
                 {new Date(chat.timestamp).toLocaleString()}
-              </p>
-            </div>
+              </Typography>
+            </Paper>
           ))
         ) : (
-          <h1 style={{ textAlign: 'center', width: '50vw' }}>No data available yet</h1>
+          <Typography variant="h5" align="center" sx={{ color: '#888' }}>
+            No data available yet
+          </Typography>
         )}
-      </Box>
+      </Grid>
     </Box>
   );
 };

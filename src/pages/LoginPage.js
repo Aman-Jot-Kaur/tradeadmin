@@ -19,13 +19,10 @@ const LoginPage = () => {
     setError(null);
 
     try {
-      // Firebase v9 authentication function
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       localStorage.setItem('adminEmailSA', formData.email);
-
-      navigate('/trades'); // Navigate to trades page after successful login
+      navigate('/trades');
     } catch (error) {
-      // Friendly error message handling
       if (error.code === 'auth/user-not-found') {
         setError('No account found with this email.');
       } else if (error.code === 'auth/wrong-password') {
@@ -45,17 +42,27 @@ const LoginPage = () => {
   return (
     <Grid
       container
-      className="outergrid"
       direction="column"
       alignItems="center"
       justifyContent="center"
       spacing={2}
-      style={{ minHeight: '100vh', padding: '20px' }}
+      sx={{
+        minHeight: '100vh',
+        p: { xs: 2, sm: 4, md: 6 }, // Responsive padding for different screens
+      }}
     >
       <Grid item>
-        <Typography variant="h5">Login</Typography>
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }, 
+            textAlign: 'center' 
+          }}
+        >
+          Login
+        </Typography>
       </Grid>
-      <Grid item>
+      <Grid item sx={{ width: { xs: '90%', sm: '70%', md: '50%' } }}>
         <form onSubmit={handleSubmit}>
           <Grid container direction="column" spacing={2}>
             <Grid item>
@@ -91,7 +98,11 @@ const LoginPage = () => {
             </Grid>
             {error && (
               <Grid item>
-                <Typography variant="body2" color="error">
+                <Typography 
+                  variant="body2" 
+                  color="error" 
+                  sx={{ textAlign: 'center' }}
+                >
                   {error}
                 </Typography>
               </Grid>

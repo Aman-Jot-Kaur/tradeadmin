@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Box, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button, TextField, CircularProgress } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+  TextField,
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { db } from '../services/firebase'; // Import the Firestore instance
 import { collection, getDocs, query, where, doc, deleteDoc } from 'firebase/firestore'; // Firestore functions
@@ -12,11 +26,14 @@ const CustomersPage = () => {
   const [userRole, setUserRole] = useState(null); // Store the current user's role
   const [loadingRole, setLoadingRole] = useState(true); // Loading state for role fetch
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if the screen is small
+
   // Fetch current user's role from Firestore (subadmins collection)
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
-        const currentUserEmail = localStorage.getItem('adminEmailSA') // Replace with the actual email of the logged-in user
+        const currentUserEmail = localStorage.getItem('adminEmailSA'); // Replace with the actual email of the logged-in user
         const subadminsRef = collection(db, 'subadmins');
         const q = query(subadminsRef, where('email', '==', currentUserEmail)); // Query by email
         const querySnapshot = await getDocs(q);
@@ -26,7 +43,7 @@ const CustomersPage = () => {
           setUserRole(userDoc.role || null);
         } else {
           setUserRole(null); // User not found
-        } 
+        }
       } catch (error) {
         console.error('Error fetching user role:', error);
         setUserRole(null); // Fallback on error
@@ -94,12 +111,12 @@ const CustomersPage = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Grid item xs={2} sx={{ padding: '20px' }}>
+    <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
+      <Grid item xs={12} sm={3} sx={{ padding: '20px' }}>
         {/* Sidebar */}
         <Sidebar />
       </Grid>
-      <Box sx={{ width: '100%', padding: '20px' }}>
+      <Box sx={{ flexGrow: 1, padding: '20px' }}>
         <Typography
           variant="h4"
           sx={{
@@ -111,28 +128,33 @@ const CustomersPage = () => {
         >
           Subadmins
         </Typography>
-        <Grid container justifyContent="space-between" alignItems="center" mb={2}>
-          <TextField
-            variant="outlined"
-            placeholder="Search by name or email"
-            value={searchQuery}
-            onChange={handleSearch}
-            sx={{ width: '50%', marginBottom: 2 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/subadmin/add"
-            sx={{
-              fontSize: 18,
-              fontWeight: 'bold',
-              padding: '10px 20px',
-              borderRadius: '10px',
-            }}
-          >
-            Add Subadmin
-          </Button>
+        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Search by name or email"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button
+              fullWidth={isMobile}
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/subadmin/add"
+              sx={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                padding: '10px 20px',
+                borderRadius: '10px',
+              }}
+            >
+              Add Subadmin
+            </Button>
+          </Grid>
         </Grid>
         <Table sx={{ minWidth: 650 }}>
           <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
@@ -159,7 +181,7 @@ const CustomersPage = () => {
                       fontWeight: 'medium',
                       color: '#0063cc',
                       textTransform: 'capitalize',
-                      marginRight: 2,
+                      marginRight: 8,
                     }}
                   >
                     Edit

@@ -20,17 +20,10 @@ const CustomerViewPage = () => {
     const [customer, setCustomer] = useState({});
     const [transactions, setTransactions] = useState([]);
     const [wallet, setWallet] = useState({});
-    const [info, setinfo] = useState({});
+    const [info, setInfo] = useState({});
+    
     useEffect(() => {
-/*************  ✨ Codeium Command ⭐  *************/
-        /**
-         * Fetches the customer's information from Firestore
-         * @async
-         * @function
-         * @param {string} id - The customer's ID
-         * @returns {Promise<void>}
-         */
-/******  8f2be12a-640e-46c2-9712-0dab1117c382  *******/        const fetchCustomer = async () => {
+        const fetchCustomer = async () => {
             const customerRef = doc(db, 'accounts', id);
             const customerSnapshot = await getDoc(customerRef);
             if (customerSnapshot.exists()) {
@@ -54,45 +47,49 @@ const CustomerViewPage = () => {
                 setWallet(walletSnapshot.data());
             }
         };
+
         const fetchInfo = async () => {
-            const walletRef = doc(db, 'users', id);
-            const walletSnapshot = await getDoc(walletRef);
-            if (walletSnapshot.exists()) {
-                setinfo(walletSnapshot.data());
+            const infoRef = doc(db, 'users', id);
+            const infoSnapshot = await getDoc(infoRef);
+            if (infoSnapshot.exists()) {
+                setInfo(infoSnapshot.data());
             }
         };
+
         fetchCustomer();
         fetchTransactions();
         fetchWallet();
         fetchInfo();
     }, [id]);
+
     const formatLabel = (label) => {
         return label
           .replace(/([A-Z])/g, ' $1')
           .replace(/^./, (match) => match.toUpperCase());
-      };
+    };
+
     return (
-        <Box sx={{ display: 'flex' }}>
-            <Grid item xs={2} sx={{ padding: '20px' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, padding: '20px' }}>
+            <Grid item xs={12} md={3} sx={{ padding: '20px', minHeight: '100vh' }}>
                 <Sidebar />
             </Grid>
-            <Box sx={{ width: '100%', padding: '20px' }}>
+            <Box sx={{ width: '100%', padding: '20px', overflowX: 'auto' }}>
                 <Typography
                     variant="h4"
                     sx={{
                         marginBottom: 4,
                         fontWeight: 'bold',
                         color: '#333',
-                        textTransform: 'uppercase'
+                        textTransform: 'uppercase',
+                        fontSize: { xs: '2rem', sm: '2.5rem' }
                     }}
                 >
                     Customer View
-
                 </Typography>
                 {!customer && <Typography variant="body1">Customer not found.</Typography>}
                 {customer && (
                     <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} md={6}>
                             <Typography
                                 variant="h6"
                                 sx={{
@@ -102,7 +99,8 @@ const CustomerViewPage = () => {
                                     textTransform: 'uppercase'
                                 }}
                             >
-                                Account              </Typography>
+                                Account
+                            </Typography>
                             <Table sx={{ minWidth: 650 }}>
                                 <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
                                     <TableRow>
@@ -111,21 +109,20 @@ const CustomerViewPage = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-    {Object.keys(customer).map((key, index) => {
-        const value = customer[key];
-        return (
-            <TableRow key={index}>
-                <TableCell>{formatLabel(key)}</TableCell>
-                <TableCell>
-                    {typeof value === "object" && value !== null
-                        ? JSON.stringify(value) // Convert object/array to string
-                        : value || "N/A"}
-                </TableCell>
-            </TableRow>
-        );
-    })}
-</TableBody>
-
+                                    {Object.keys(customer).map((key, index) => {
+                                        const value = customer[key];
+                                        return (
+                                            <TableRow key={index}>
+                                                <TableCell>{formatLabel(key)}</TableCell>
+                                                <TableCell>
+                                                    {typeof value === "object" && value !== null
+                                                        ? JSON.stringify(value)
+                                                        : value || "N/A"}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
                             </Table>
                             <Typography
                                 variant="h6"
@@ -136,7 +133,8 @@ const CustomerViewPage = () => {
                                     textTransform: 'uppercase'
                                 }}
                             >
-                                Other Info             </Typography>
+                                Other Info
+                            </Typography>
                             <Table sx={{ minWidth: 650 }}>
                                 <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
                                     <TableRow>
@@ -145,26 +143,27 @@ const CustomerViewPage = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-  {info && Object.keys(info).length > 0 ? (
-    Object.keys(info).map((key, index) => (
-      <TableRow key={index}>
-        <TableCell align="left">{formatLabel(key)}</TableCell>
-        <TableCell align="right">
-          {typeof info[key] === 'object' ? JSON.stringify(info[key], null, 2) : info[key] || "N/A"}
-        </TableCell>
-      </TableRow>
-    ))
-  ) : (
-    <TableRow>
-      <TableCell colSpan={2}>No data available</TableCell>
-    </TableRow>
-  )}
-</TableBody>
-
+                                    {info && Object.keys(info).length > 0 ? (
+                                        Object.keys(info).map((key, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell align="left">{formatLabel(key)}</TableCell>
+                                                <TableCell align="right">
+                                                    {typeof info[key] === 'object'
+                                                        ? JSON.stringify(info[key], null, 2)
+                                                        : info[key] || "N/A"}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={2}>No data available</TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
                             </Table>
-                        </Grid> ̰
-                        
-                        <Grid item xs={6}>
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
                             <Typography
                                 variant="h6"
                                 sx={{
@@ -196,6 +195,7 @@ const CustomerViewPage = () => {
                         </Grid>
                     </Grid>
                 )}
+
                 <Typography
                     variant="h6"
                     sx={{
@@ -208,28 +208,31 @@ const CustomerViewPage = () => {
                 >
                     Transactions
                 </Typography>
-                {!transactions.length && <TableRow><TableCell >No transactions available</TableCell></TableRow>}
 
-                {transactions.length !== 0 && <Table sx={{ minWidth: 650 }}>
-                    <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
-                        <TableRow>
-                            <TableCell>Timestamp</TableCell>
-                            <TableCell>Type</TableCell>
-                            <TableCell>Amount</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {transactions.map((transaction, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{transaction.timestamp?.toDate().toLocaleString()}</TableCell>
-                                <TableCell>{transaction.type}</TableCell>
-                                <TableCell>{transaction.amount}</TableCell>
+                {transactions.length === 0 && (
+                    <TableRow><TableCell>No transactions available</TableCell></TableRow>
+                )}
+
+                {transactions.length !== 0 && (
+                    <Table sx={{ minWidth: 650 }}>
+                        <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
+                            <TableRow>
+                                <TableCell>Timestamp</TableCell>
+                                <TableCell>Type</TableCell>
+                                <TableCell>Amount</TableCell>
                             </TableRow>
-                        ))}
-
-                    </TableBody>
-                </Table>
-                }
+                        </TableHead>
+                        <TableBody>
+                            {transactions.map((transaction, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{transaction.timestamp?.toDate().toLocaleString()}</TableCell>
+                                    <TableCell>{transaction.type}</TableCell>
+                                    <TableCell>{transaction.amount}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
             </Box>
         </Box>
     );
