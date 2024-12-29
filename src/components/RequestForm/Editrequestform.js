@@ -179,9 +179,9 @@ const RequestForm = () => {
           fullWidth
         />
         <TextField
-          label="Total Amount"
-          name="totalAmount"
-          value={request.totalAmount}
+          label="Amount requested"
+          name="amount"
+          value={request.amount}
           onChange={handleInputChange}
           
           type="number"
