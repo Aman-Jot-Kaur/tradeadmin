@@ -34,7 +34,7 @@ const EditSubadminPage = () => {
   };
 
   return (
-    <Grid container direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ height: '100vh' }}>
+    <Grid container direction={{ xs: 'row', md: 'row' }} spacing={2} sx={{ height: '100vh' }}>
       {/* Sidebar */}
       <Grid
         item
@@ -44,7 +44,6 @@ const EditSubadminPage = () => {
         sx={{
           backgroundColor: '#f5f5f5',
           padding: 2,
-          height: { md: '100%', xs: 'auto' },
         }}
       >
         <Sidebar />
@@ -65,7 +64,7 @@ const EditSubadminPage = () => {
         }}
       >
         <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: 4 }}>
-          Edit Subadmin Request
+          Edit  Request
         </Typography>
         <EditRequestPage
           handleInputChange={handleInputChange}

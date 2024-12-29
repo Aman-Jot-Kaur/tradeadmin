@@ -20,6 +20,8 @@ import ChatViewPage from './pages/ChatDetailPage'; // Assuming you have a ChatVi
 import NewsPage from './pages/News';
 import NewsFormPage from './pages/NewsForm';
 import SignupPage from './pages/Signup';
+import AdminContactPage from './pages/AdminContact';
+import AdminPaymentPage from './pages/PaymentInfo';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -103,10 +105,12 @@ function App() {
           path="/requests/:id"
           element={user ? <EditRequestPage /> : <Navigate to="/" replace />}
         />
+        <Route path="/contact" element={user ? <AdminContactPage/> : <Navigate to="/" replace />} />
         <Route
           path="/requests/add"
           element={user ? <AddRequestPage /> : <Navigate to="/" replace />}
         />
+        <Route path="payment" element={user? <AdminPaymentPage/> : <Navigate to="/" replace />} />
          <Route path="/news/add" element={<NewsFormPage />} />
          <Route path="/news/edit/:id" element={<NewsFormPage />} />
       </Routes>

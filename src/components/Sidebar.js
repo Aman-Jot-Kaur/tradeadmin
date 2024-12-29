@@ -90,9 +90,15 @@ const Sidebar = () => {
               sx={{ fontSize: 18, fontWeight: 'medium', color: '#0063cc', textTransform: 'capitalize' }}
             />
           </ListItem>
-          <ListItem button component={Link} to="/news">
+          <ListItem button component={Link} to="/contact">
             <ListItemText 
-              primary="News" 
+              primary="Admin Contact" 
+              sx={{ fontSize: 18, fontWeight: 'medium', color: '#0063cc', textTransform: 'capitalize' }}
+            />
+          </ListItem>
+          <ListItem button component={Link} to="/payment">
+            <ListItemText 
+              primary="Payment Details" 
               sx={{ fontSize: 18, fontWeight: 'medium', color: '#0063cc', textTransform: 'capitalize' }}
             />
           </ListItem>
@@ -165,9 +171,15 @@ const Sidebar = () => {
                 sx={{ fontSize: 18, fontWeight: 'medium', color: '#0063cc', textTransform: 'capitalize' }}
               />
             </ListItem>
-            <ListItem button component={Link} to="/news" onClick={toggleDrawer}>
+            <ListItem button component={Link} to="/contact" onClick={toggleDrawer}>
               <ListItemText 
-                primary="News" 
+                primary="Admin Contact" 
+                sx={{ fontSize: 18, fontWeight: 'medium', color: '#0063cc', textTransform: 'capitalize' }}
+              />
+            </ListItem>
+            <ListItem button component={Link} to="/payment" onClick={toggleDrawer}>
+              <ListItemText 
+                primary="Payment Details" 
                 sx={{ fontSize: 18, fontWeight: 'medium', color: '#0063cc', textTransform: 'capitalize' }}
               />
             </ListItem>

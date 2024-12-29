@@ -5,6 +5,7 @@ import { rtdb } from '../services/firebase';
 import { Grid, Box, Typography, TextField, Button } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 
+
 const ChatDetailPage = () => {
   const { sender } = useParams();
   const [chatMessages, setChatMessages] = useState([]);

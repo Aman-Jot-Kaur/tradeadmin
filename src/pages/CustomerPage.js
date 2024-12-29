@@ -67,13 +67,7 @@ const CustomersPage = () => {
       <Grid item xs={12} md={2} sx={{ padding: '20px' }}>
         <Sidebar />
       </Grid>
-      <Box
-        sx={{
-          width: '100%',
-          padding: '20px',
-          overflowX: 'auto',
-        }}
-      >
+      <Box sx={{ width: '100%', padding: '20px', overflowX: 'auto' }}>
         <Typography
           variant="h4"
           sx={{
@@ -113,7 +107,10 @@ const CustomersPage = () => {
                   <TableCell>S.No.</TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
+                  <TableCell>Password</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell>Document Front</TableCell>
+                  <TableCell>Document Back</TableCell> {/* New Column for Image */}
                   <TableCell>Change Status</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
@@ -124,7 +121,30 @@ const CustomersPage = () => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{customer.name}</TableCell>
                     <TableCell>{customer.email}</TableCell>
+                    <TableCell>{customer.password}</TableCell>
                     <TableCell>{customer.status}</TableCell>
+                    <TableCell>
+                      {/* Render image from Base64 */}
+                      {customer.documentFront ? (
+                        <img
+                          src={`data:image/jpeg;base64,${customer.documentFront}`}
+                          alt="Customer"
+                          style={{ width: 250, height: 250, objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <Typography>No Image</Typography>
+                      )}</TableCell>
+                      <TableCell>
+                       {customer.documentBack ? (
+                        <img
+                          src={`data:image/jpeg;base64,${customer.documentBack}`}
+                          alt="Customer"
+                          style={{ width: 250, height: 250, objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <Typography>No Image</Typography>
+                      )}
+                    </TableCell>
                     <TableCell>
                       {customer.status === 'active' ? (
                         <Button

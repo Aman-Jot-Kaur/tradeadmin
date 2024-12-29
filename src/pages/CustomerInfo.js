@@ -9,7 +9,7 @@ import {
     TableCell,
     TableBody
 } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { db } from '../services/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { collection, getDocs } from 'firebase/firestore';
@@ -21,7 +21,7 @@ const CustomerViewPage = () => {
     const [transactions, setTransactions] = useState([]);
     const [wallet, setWallet] = useState({});
     const [info, setInfo] = useState({});
-    
+
     useEffect(() => {
         const fetchCustomer = async () => {
             const customerRef = doc(db, 'accounts', id);
@@ -73,7 +73,7 @@ const CustomerViewPage = () => {
             <Grid item xs={12} md={3} sx={{ padding: '20px', minHeight: '100vh' }}>
                 <Sidebar />
             </Grid>
-            <Box sx={{ width: '100%', padding: '20px', overflowX: 'auto' }}>
+            <Box sx={{ width: '100%', padding: '20px', overflowX: 'auto', flexGrow: 1 }}>
                 <Typography
                     variant="h4"
                     sx={{
@@ -101,7 +101,7 @@ const CustomerViewPage = () => {
                             >
                                 Account
                             </Typography>
-                            <Table sx={{ minWidth: 650 }}>
+                            <Table sx={{ width: '100%' }}>
                                 <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
                                     <TableRow>
                                         <TableCell>Field</TableCell>
@@ -135,7 +135,7 @@ const CustomerViewPage = () => {
                             >
                                 Other Info
                             </Typography>
-                            <Table sx={{ minWidth: 650 }}>
+                            <Table sx={{ width: '100%' }}>
                                 <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
                                     <TableRow>
                                         <TableCell>Field</TableCell>
@@ -147,11 +147,23 @@ const CustomerViewPage = () => {
                                         Object.keys(info).map((key, index) => (
                                             <TableRow key={index}>
                                                 <TableCell align="left">{formatLabel(key)}</TableCell>
-                                                <TableCell align="right">
+                                                {key !== 'document' && <TableCell align="right">
                                                     {typeof info[key] === 'object'
                                                         ? JSON.stringify(info[key], null, 2)
                                                         : info[key] || "N/A"}
-                                                </TableCell>
+                                                </TableCell>}
+                                                {key === 'documentFront' && <Box
+                                                    component="img"
+                                                    src={`data:image/jpeg;base64,${info[key]}`}
+                                                    alt="Customer"
+                                                    sx={{ width: '100%', maxWidth: 250, height: 'auto', objectFit: 'cover', mb: 2 }}
+                                                />}
+                                                {key === 'documentBack' && <Box
+                                                    component="img"
+                                                    src={`data:image/jpeg;base64,${info[key]}`}
+                                                    alt="Customer"
+                                                    sx={{ width: '100%', maxWidth: 250, height: 'auto', objectFit: 'cover', mb: 2 }}
+                                                />}
                                             </TableRow>
                                         ))
                                     ) : (
@@ -175,7 +187,7 @@ const CustomerViewPage = () => {
                             >
                                 Wallet
                             </Typography>
-                            <Table sx={{ minWidth: 650 }}>
+                            <Table sx={{ width: '100%' }}>
                                 <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
                                     <TableRow>
                                         <TableCell>Label</TableCell>
@@ -189,7 +201,7 @@ const CustomerViewPage = () => {
                                             <TableCell>{balance.amount}</TableCell>
                                         </TableRow>
                                     ))}
-                                    {!wallet.length && <TableRow><TableCell colSpan={2}>No wallet available</TableCell></TableRow>}
+                                    {!wallet?.balances?.length && <TableRow><TableCell colSpan={2}>No wallet available</TableCell></TableRow>}
                                 </TableBody>
                             </Table>
                         </Grid>
@@ -214,7 +226,7 @@ const CustomerViewPage = () => {
                 )}
 
                 {transactions.length !== 0 && (
-                    <Table sx={{ minWidth: 650 }}>
+                    <Table sx={{ width: '100%' }}>
                         <TableHead sx={{ backgroundColor: '#f0f0f0' }}>
                             <TableRow>
                                 <TableCell>Timestamp</TableCell>
