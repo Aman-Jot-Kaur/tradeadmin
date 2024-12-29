@@ -9,14 +9,16 @@ const RequestsPage = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [assignedUsers, setAssignedUsers] = useState([]);
-  const currentAdminEmail = localStorage.getItem('adminEmailSA'); 
+  // const currentAdminEmail = localStorage.getItem('adminEmailSA'); 
 
   useEffect(() => {
     const fetchSubadminData = async () => {
+      var currentAdminEmail= await localStorage.getItem('adminEmailSA');
       if (currentAdminEmail) {
         try {
           const subadminsRef = collection(db, 'subadmins');
           const q = query(subadminsRef, where('email', '==', currentAdminEmail)); 
+          
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
@@ -35,7 +37,7 @@ const RequestsPage = () => {
     };
 
     fetchSubadminData();
-  }, [currentAdminEmail]);
+  }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {
