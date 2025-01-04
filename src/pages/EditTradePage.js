@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Box, Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { db } from '../services/firebase'; // Import `db` instead of `firebase`
-import { doc, getDoc, updateDoc } from 'firebase/firestore'; // Firestore functions
+import { db } from '../services/firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import Sidebar from '../components/Sidebar';
 import TradeForm from '../components/TradeForm/TradeForm';
 
@@ -12,8 +12,8 @@ const EditTradePage = () => {
 
   useEffect(() => {
     const fetchTrade = async () => {
-      const tradeRef = doc(db, 'trades', id); // Reference to the specific document
-      const tradeDoc = await getDoc(tradeRef); // Use getDoc to retrieve the document
+      const tradeRef = doc(db, 'trades', id);
+      const tradeDoc = await getDoc(tradeRef);
       setTrade(tradeDoc.data());
     };
     fetchTrade();
@@ -21,8 +21,8 @@ const EditTradePage = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const tradeRef = doc(db, 'trades', id); // Reference to the specific document
-    await updateDoc(tradeRef, trade); // Use updateDoc to update the document
+    const tradeRef = doc(db, 'trades', id);
+    await updateDoc(tradeRef, trade);
     window.location.href = '/trades';
   };
 
@@ -34,8 +34,7 @@ const EditTradePage = () => {
   };
 
   return (
-    <Grid container direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ minHeight: '100vh' }}>
-      {/* Sidebar */}
+    <Grid container direction={{ xs: 'row', md: 'row' }} spacing={2} sx={{ minHeight: '100vh' }}>
       <Grid
         item
         xs={12}
@@ -51,8 +50,6 @@ const EditTradePage = () => {
       >
         <Sidebar />
       </Grid>
-
-      {/* Main Content */}
       <Grid
         item
         xs={12}
@@ -60,14 +57,14 @@ const EditTradePage = () => {
         lg={10}
         sx={{
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: { xs: 'column', md: 'roq' },
           alignItems: 'center',
           justifyContent: 'flex-start',
           padding: { xs: 2, md: 4 },
           backgroundColor: '#ECF0F1',
           borderRadius: 2,
           boxShadow: 3,
-          overflowY: 'auto', // Ensures scrolling only for the content area
+          overflowY: 'auto',
         }}
       >
         <Typography
@@ -81,8 +78,8 @@ const EditTradePage = () => {
         >
           Edit Trade
         </Typography>
+        {/* Removed <form> wrapping TradeForm */}
         <Box
-          component="form"
           sx={{
             width: '100%',
             maxWidth: '800px',
@@ -90,34 +87,14 @@ const EditTradePage = () => {
             backgroundColor: 'white',
             borderRadius: 2,
             boxShadow: 2,
-            overflow: 'auto',  // Allow content to scroll if necessary
           }}
-          onSubmit={handleUpdate}
         >
           <TradeForm
             handleInputChange={handleInputChange}
-            handleSubmit={handleUpdate}
+            handleSubmit={handleUpdate} // Pass handleUpdate to TradeForm
             formData={trade}
             isUpdateForm
           />
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              sx={{
-                padding: '12px 24px',
-                borderRadius: '8px',
-                boxShadow: 2,
-                '&:hover': {
-                  backgroundColor: '#1D3557',
-                  boxShadow: 6,
-                },
-              }}
-            >
-              Save Changes
-            </Button>
-          </Box>
         </Box>
       </Grid>
     </Grid>
